@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Africa Aesthetics Spa</title>
+  <meta name="description" content="Get in touch with Africa Aesthetics Spa. Find our location, business hours, phone and contact form. Mon–Sat, 9am–5pm." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Africa <span>Aesthetics</span></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <div class="nav-dropdown">
+          <a href="#">Services ▾</a>
+          <div class="nav-dropdown-menu">
+            <a href="services/lashes.html">Lashes</a>
+            <a href="services/hair.html">Hair</a>
+            <a href="services/facials.html">Facials</a>
+            <a href="services/body-contouring.html">Body Contouring</a>
+            <a href="services/aesthetics.html">Aesthetics</a>
+            <a href="services/massages.html">Massages</a>
+            <a href="services/pedicure.html">Pedicure</a>
+          </div>
+        </div>
+        <a href="gallery.html">Gallery</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="booking.html" class="btn-book-nav">Book Now →</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <div class="section-label">Get In Touch</div>
+      <h1 class="section-title">Contact Us</h1>
+      <p class="section-subtitle centered" style="margin: 0 auto;">
+        Have a question or want to learn more? We'd love to hear from you.
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="section-light">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Info Column -->
+        <div>
+          <h2 style="font-size: 28px; margin-bottom: 32px;" class="fade-in">How to Reach Us</h2>
+
+          <div class="contact-info-item fade-in">
+            <div class="info-icon">📍</div>
+            <div>
+              <h4>Location</h4>
+              <p>Africa Aesthetics Spa<br />Contact us for directions</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item fade-in">
+            <div class="info-icon">⏰</div>
+            <div>
+              <h4>Business Hours</h4>
+              <p>Monday – Saturday: 9:00 AM – 5:00 PM<br />Sunday: Closed</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item fade-in">
+            <div class="info-icon">📱</div>
+            <div>
+              <h4>Social Media</h4>
+              <p>Follow us on Instagram for the latest treatments, before/afters, and special offers.</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item fade-in">
+            <div class="info-icon">💳</div>
+            <div>
+              <h4>Booking Info</h4>
+              <p>Book online with a K50 non-refundable deposit. Appointments available 9am–5pm, Mon–Sat.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Column -->
+        <div class="fade-in">
+          <div style="background: var(--cream); border: 1px solid var(--light-border); border-radius: var(--radius-md); padding: 32px;">
+            <h3 style="font-size: 22px; margin-bottom: 24px;">Send Us a Message</h3>
+            <form id="contactForm" onsubmit="event.preventDefault(); alert('Thank you for your message! We will get back to you shortly.'); this.reset();">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Your full name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Your phone number" />
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject">
+                  <option value="">Select a topic</option>
+                  <option value="booking">Booking Inquiry</option>
+                  <option value="services">Service Information</option>
+                  <option value="pricing">Pricing</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell us how we can help..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">Africa <span>Aesthetics</span></div>
+          <p class="footer-desc">Premium beauty and wellness treatments by CPD-accredited professionals.</p>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services/lashes.html">Lashes</a></li>
+            <li><a href="services/hair.html">Hair</a></li>
+            <li><a href="services/facials.html">Facials</a></li>
+            <li><a href="services/body-contouring.html">Body Contouring</a></li>
+            <li><a href="services/aesthetics.html">Aesthetics</a></li>
+            <li><a href="services/massages.html">Massages</a></li>
+            <li><a href="services/pedicure.html">Pedicure</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="booking.html">Book Now</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Hours</h5>
+          <ul>
+            <li><a>Mon – Sat: 9am – 5pm</a></li>
+            <li><a>Sunday: Closed</a></li>
+          </ul>
+          <h5 style="margin-top: 24px;">Legal</h5>
+          <ul>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Africa Aesthetics Spa. All rights reserved.</span>
+        <a href="cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-inner">
+      <p class="cookie-text">We use cookies to enhance your experience. <a href="cookie-policy.html">Read our Cookie Policy</a></p>
+      <div class="cookie-actions">
+        <button class="cookie-accept">Accept</button>
+        <button class="cookie-decline">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pay Deposit — Africa Aesthetics Spa</title>
+  <meta name="description" content="Secure your booking with a K50 deposit. Pay via Mobile Money (Airtel, TNM) or bank card (Visa, Mastercard)." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ═══ Payment Page Styles ═══ */
+
+    .payment-wrapper {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Booking summary strip */
+    .pay-summary {
+      background: var(--white);
+      border: 1px solid var(--light-border);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .pay-summary-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--teal-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .pay-summary-details h4 {
+      font-size: 15px;
+      font-family: var(--font-heading);
+      margin-bottom: 2px;
+    }
+
+    .pay-summary-details p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pay-summary-amount {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .pay-summary-amount .amount {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      font-family: var(--font-heading);
+    }
+
+    .pay-summary-amount .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Timer */
+    .pay-timer {
+      text-align: center;
+      padding: 12px;
+      background: linear-gradient(135deg, #fff8e7, #fff);
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pay-timer strong {
+      color: var(--gold-dark);
+      font-family: var(--font-heading);
+      font-size: 18px;
+    }
+
+    /* Method tabs */
+    .pay-tabs {
+      display: flex;
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+      background: #f9f9f9;
+    }
+
+    .pay-tab {
+      flex: 1;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pay-tab:first-child {
+      border-right: 2px solid var(--light-border);
+    }
+
+    .pay-tab:hover {
+      background: var(--white);
+    }
+
+    .pay-tab.active {
+      background: var(--white);
+      color: var(--teal);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .pay-tab .tab-icon {
+      font-size: 20px;
+    }
+
+    /* Payment forms */
+    .pay-form {
+      display: none;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .pay-form.active { display: block; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile Money */
+    .momo-providers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .momo-provider {
+      background: var(--white);
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .momo-provider:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .momo-provider.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.15);
+    }
+
+    .momo-provider .mp-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .momo-provider[data-provider="airtel"] .mp-icon {
+      background: linear-gradient(135deg, #e8192c, #ff4757);
+      color: white;
+    }
+
+    .momo-provider[data-provider="tnm"] .mp-icon {
+      background: linear-gradient(135deg, #00b300, #2ecc71);
+      color: white;
+    }
+
+    .momo-provider h4 { font-size: 15px; font-family: var(--font-heading); margin-bottom: 2px; }
+    .momo-provider p { font-size: 11px; color: var(--muted); }
+
+    .momo-phone-form {
+      display: none;
+      margin-top: 20px;
+      padding: 24px;
+      background: #fafbfc;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--light-border);
+    }
+
+    .momo-phone-form.visible {
+      display: block;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .momo-phone-form .momo-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .momo-phone-form .momo-label .ml-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .momo-steps {
+      margin: 20px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .momo-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 13px;
+      color: var(--body);
+      line-height: 1.5;
+    }
+
+    .momo-steps li .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Card form */
+    .card-brands {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+
+    .card-brand {
+      padding: 8px 16px;
+      border: 1.5px solid var(--light-border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-form-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-field {
+      position: relative;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--body);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--light-border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: 'Inter', monospace;
+      transition: var(--transition);
+      background: var(--white);
+      box-sizing: border-box;
+    }
+
+    .form-field input:focus {
+      border-color: var(--teal);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+    }
+
+    .form-field input::placeholder {
+      color: #c4c4c4;
+    }
+
+    .form-field .field-icon {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #f0faf8;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Pay button */
+    .pay-btn {
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: var(--radius-xl);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pay-btn-momo {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(42, 157, 143, 0.35);
+    }
+
+    .pay-btn-card {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--white);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .pay-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+
+    .pay-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .pay-btn .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .pay-btn.loading .spinner {
+      display: inline-block;
+    }
+
+    .pay-btn.loading .btn-label {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success overlay */
+    .payment-success-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .payment-success-overlay.visible {
+      display: flex;
+    }
+
+    .payment-success-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      max-width: 460px;
+      width: 92%;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: fadeSlideIn 0.4s ease;
+    }
+
+    .psm-header {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      padding: 36px 24px;
+      text-align: center;
+      color: white;
+    }
+
+    .psm-header .check-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 14px;
+    }
+
+    .psm-header h2 {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .psm-header p {
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+    }
+
+    .psm-body {
+      padding: 28px 24px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 13px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+
+    .receipt-row .rr-label { color: var(--muted); }
+    .receipt-row .rr-value { font-weight: 600; }
+
+    .receipt-row.total {
+      border-top: 2px solid var(--teal);
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+
+    .receipt-row.total .rr-label { font-weight: 600; color: var(--dark); }
+    .receipt-row.total .rr-value { color: var(--teal); font-size: 18px; }
+
+    .psm-footer {
+      padding: 0 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .psm-footer .btn {
+      text-align: center;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .momo-providers { grid-template-columns: 1fr; }
+      .card-row { grid-template-columns: 1fr; }
+      .pay-summary { flex-direction: column; text-align: center; gap: 12px; }
+      .pay-summary-amount { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Africa <span>Aesthetics</span></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <div class="nav-dropdown">
+          <a href="#">Services ▾</a>
+          <div class="nav-dropdown-menu">
+            <a href="services/lashes.html">Lashes</a>
+            <a href="services/hair.html">Hair</a>
+            <a href="services/facials.html">Facials</a>
+            <a href="services/body-contouring.html">Body Contouring</a>
+            <a href="services/aesthetics.html">Aesthetics</a>
+            <a href="services/massages.html">Massages</a>
+            <a href="services/pedicure.html">Pedicure</a>
+          </div>
+        </div>
+        <a href="gallery.html">Gallery</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="booking.html" class="btn-book-nav">Book Now →</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <div class="section-label">Secure Payment</div>
+      <h1 class="section-title">Pay Your Deposit</h1>
+      <p class="section-subtitle centered" style="margin: 0 auto;">
+        Choose your preferred payment method to secure your appointment with a K50 deposit.
+      </p>
+    </div>
+  </div>
+
+  <!-- PAYMENT SECTION -->
+  <section class="section-light" style="padding-bottom: 100px;">
+    <div class="container">
+      <div class="payment-wrapper">
+
+        <!-- Booking Summary Strip -->
+        <div class="pay-summary" id="paySummaryCard">
+          <div class="pay-summary-icon">📋</div>
+          <div class="pay-summary-details">
+            <h4 id="paySumService">Your Appointment</h4>
+            <p id="paySumDetails">Loading booking details...</p>
+          </div>
+          <div class="pay-summary-amount">
+            <div class="label">Deposit</div>
+            <div class="amount">K50</div>
+          </div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="pay-timer">
+          Reservation held for <strong id="timerDisplay">10:00</strong> minutes — pay now to secure your slot.
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div class="pay-tabs">
+          <button class="pay-tab active" onclick="switchPayTab('momo')" id="tabMomo">
+            <span class="tab-icon">📱</span>
+            Mobile Money
+          </button>
+          <button class="pay-tab" onclick="switchPayTab('card')" id="tabCard">
+            <span class="tab-icon">💳</span>
+            Bank Card
+          </button>
+        </div>
+
+        <!-- ═══ MOBILE MONEY FORM ═══ -->
+        <div class="pay-form active" id="formMomo">
+          <h3 style="font-size: 17px; font-family: var(--font-heading); margin-bottom: 4px;">Select Your Provider</h3>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Choose your mobile money network to make the K50 deposit payment.</p>
+
+          <div class="momo-providers">
+            <div class="momo-provider" data-provider="airtel" onclick="selectProvider('airtel')">
+              <div class="mp-icon">A</div>
+              <h4>Airtel Money</h4>
+              <p>Pay with Airtel Money</p>
+            </div>
+            <div class="momo-provider" data-provider="tnm" onclick="selectProvider('tnm')">
+              <div class="mp-icon">T</div>
+              <h4>TNM Mpamba</h4>
+              <p>Pay with TNM Mpamba</p>
+            </div>
+          </div>
+
+          <!-- Airtel Money Form -->
+          <div class="momo-phone-form" id="momoFormAirtel">
+            <div class="momo-label">
+              <span class="ml-badge" style="background: #e8192c;">Airtel</span>
+              Airtel Money Payment
+            </div>
+            <div class="form-field" style="margin-bottom: 16px;">
+              <label for="airtelPhone">Airtel Phone Number</label>
+              <input type="tel" id="airtelPhone" placeholder="e.g. 0991 234 567" maxlength="13" oninput="validateMomoPhone('airtel')" />
+            </div>
+            <ul class="momo-steps">
+              <li><span class="step-num">1</span> Enter your Airtel Money registered phone number above</li>
+              <li><span class="step-num">2</span> Click "Pay K50 via Airtel Money" below</li>
+              <li><span class="step-num">3</span> You'll receive a payment prompt on your phone — enter your PIN to confirm</li>
+              <li><span class="step-num">4</span> Once confirmed, your booking is secured!</li>
+            </ul>
+            <button class="pay-btn pay-btn-momo" id="btnPayAirtel" disabled onclick="processMomoPayment('airtel')">
+              <span class="spinner"></span>
+              <span class="btn-label">Pay K50 via Airtel Money</span>
+            </button>
+          </div>
+
+          <!-- TNM Mpamba Form -->
+          <div class="momo-phone-form" id="momoFormTnm">
+            <div class="momo-label">
+              <span class="ml-badge" style="background: #00b300;">TNM</span>
+              TNM Mpamba Payment
+            </div>
+            <div class="form-field" style="margin-bottom: 16px;">
+              <label for="tnmPhone">TNM Phone Number</label>
+              <input type="tel" id="tnmPhone" placeholder="e.g. 0881 234 567" maxlength="13" oninput="validateMomoPhone('tnm')" />
+            </div>
+            <ul class="momo-steps">
+              <li><span class="step-num">1</span> Enter your TNM Mpamba registered phone number above</li>
+              <li><span class="step-num">2</span> Click "Pay K50 via Mpamba" below</li>
+              <li><span class="step-num">3</span> You'll receive a USSD prompt — enter your Mpamba PIN to confirm</li>
+              <li><span class="step-num">4</span> Once confirmed, your booking is secured!</li>
+            </ul>
+            <button class="pay-btn pay-btn-momo" id="btnPayTnm" disabled onclick="processMomoPayment('tnm')">
+              <span class="spinner"></span>
+              <span class="btn-label">Pay K50 via Mpamba</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ BANK CARD FORM ═══ -->
+        <div class="pay-form" id="formCard">
+          <div class="card-brands">
+            <div class="card-brand">💳 Visa</div>
+            <div class="card-brand">💳 Mastercard</div>
+          </div>
+
+          <div class="card-form-grid">
+            <div class="form-field">
+              <label for="cardName">Cardholder Name</label>
+              <input type="text" id="cardName" placeholder="Name on card" oninput="validateCard()" />
+            </div>
+
+            <div class="form-field">
+              <label for="cardNumber">Card Number</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this); validateCard()" />
+              <span class="field-icon" id="cardTypeIcon">💳</span>
+            </div>
+
+            <div class="card-row">
+              <div class="form-field">
+                <label for="cardExpiry">Expiry Date</label>
+                <input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this); validateCard()" />
+              </div>
+              <div class="form-field">
+                <label for="cardCvv">CVV</label>
+                <input type="text" id="cardCvv" placeholder="123" maxlength="4" oninput="validateCard()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="secure-note">
+            🔒 Your payment is secured with 256-bit SSL encryption. Card details are never stored on our servers.
+          </div>
+
+          <button class="pay-btn pay-btn-card" id="btnPayCard" disabled onclick="processCardPayment()">
+            <span class="spinner"></span>
+            <span class="btn-label">Pay K50 Deposit</span>
+          </button>
+        </div>
+
+        <!-- Back to booking -->
+        <div style="text-align: center; margin-top: 24px;">
+          <a href="booking.html" style="font-size: 13px; color: var(--muted); text-decoration: underline;">← Go back to booking</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PAYMENT SUCCESS MODAL -->
+  <div class="payment-success-overlay" id="paymentSuccessOverlay">
+    <div class="payment-success-modal">
+      <div class="psm-header">
+        <div class="check-circle">✓</div>
+        <h2>Payment Successful!</h2>
+        <p>Your appointment is now confirmed</p>
+      </div>
+      <div class="psm-body">
+        <div class="receipt-row">
+          <span class="rr-label">Reference</span>
+          <span class="rr-value" id="receiptRef">AAS-2026-XXXXX</span>
+        </div>
+        <div class="receipt-row">
+          <span class="rr-label">Service</span>
+          <span class="rr-value" id="receiptService">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="rr-label">Treatment</span>
+          <span class="rr-value" id="receiptTreatment">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="rr-label">Date & Time</span>
+          <span class="rr-value" id="receiptDateTime">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="rr-label">Therapist</span>
+          <span class="rr-value" id="receiptTherapist">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="rr-label">Payment Method</span>
+          <span class="rr-value" id="receiptMethod">—</span>
+        </div>
+        <div class="receipt-row total">
+          <span class="rr-label">Amount Paid</span>
+          <span class="rr-value">K50.00</span>
+        </div>
+      </div>
+      <div class="psm-footer">
+        <a href="/" class="btn btn-primary" style="width: 100%; text-align: center;">Done — Back to Home</a>
+        <button onclick="window.print()" class="btn btn-outline-teal" style="width: 100%; text-align: center; font-size: 13px;">Print Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">Africa <span>Aesthetics</span></div>
+          <p class="footer-desc">Premium beauty and wellness treatments by CPD-accredited professionals.</p>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services/lashes.html">Lashes</a></li>
+            <li><a href="services/hair.html">Hair</a></li>
+            <li><a href="services/facials.html">Facials</a></li>
+            <li><a href="services/body-contouring.html">Body Contouring</a></li>
+            <li><a href="services/aesthetics.html">Aesthetics</a></li>
+            <li><a href="services/massages.html">Massages</a></li>
+            <li><a href="services/pedicure.html">Pedicure</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="booking.html">Book Now</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Hours</h5>
+          <ul>
+            <li><a>Mon – Sat: 9am – 5pm</a></li>
+            <li><a>Sunday: Closed</a></li>
+          </ul>
+          <h5 style="margin-top: 24px;">Legal</h5>
+          <ul>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Africa Aesthetics Spa. All rights reserved.</span>
+        <a href="cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-inner">
+      <p class="cookie-text">We use cookies to enhance your experience. <a href="cookie-policy.html">Read our Cookie Policy</a></p>
+      <div class="cookie-actions">
+        <button class="cookie-accept">Accept</button>
+        <button class="cookie-decline">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* ═══════════════════════════════════════
+       PAYMENT ENGINE
+       Mobile Money + Bank Card
+       ═══════════════════════════════════════ */
+
+    let selectedProvider = null;
+    let countdownSeconds = 600; // 10 minutes
+    let timerInterval = null;
+
+    // ── Load booking data from sessionStorage ──
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBookingData();
+      startTimer();
+    });
+
+    function loadBookingData() {
+      const data = sessionStorage.getItem('aas_booking');
+      if (data) {
+        const b = JSON.parse(data);
+        document.getElementById('paySumService').textContent = (b.treatment || b.service || 'Your Appointment');
+        document.getElementById('paySumDetails').textContent =
+          `${b.therapistName || 'Therapist'} · ${b.dateStr || 'Date TBD'} at ${b.timeStr || ''}`;
+      } else {
+        document.getElementById('paySumDetails').textContent = 'Complete your booking first to see details here.';
+      }
+    }
+
+    // ── Countdown Timer ──
+    function startTimer() {
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        countdownSeconds--;
+        if (countdownSeconds <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('timerDisplay').textContent = '0:00';
+          document.querySelector('.pay-timer').style.background = 'linear-gradient(135deg, #ffe0e0, #fff)';
+          document.querySelector('.pay-timer').style.borderColor = 'rgba(200,50,50,0.2)';
+        }
+        updateTimerDisplay();
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(countdownSeconds / 60);
+      const s = countdownSeconds % 60;
+      document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    // ── Tab Switching ──
+    function switchPayTab(tab) {
+      document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.pay-form').forEach(f => f.classList.remove('active'));
+
+      if (tab === 'momo') {
+        document.getElementById('tabMomo').classList.add('active');
+        document.getElementById('formMomo').classList.add('active');
+      } else {
+        document.getElementById('tabCard').classList.add('active');
+        document.getElementById('formCard').classList.add('active');
+      }
+    }
+
+    // ── Mobile Money ──
+    function selectProvider(provider) {
+      selectedProvider = provider;
+      document.querySelectorAll('.momo-provider').forEach(p => p.classList.remove('selected'));
+      document.querySelector(`.momo-provider[data-provider="${provider}"]`).classList.add('selected');
+
+      // Show correct form
+      document.getElementById('momoFormAirtel').classList.remove('visible');
+      document.getElementById('momoFormTnm').classList.remove('visible');
+
+      if (provider === 'airtel') {
+        document.getElementById('momoFormAirtel').classList.add('visible');
+      } else {
+        document.getElementById('momoFormTnm').classList.add('visible');
+      }
+    }
+
+    function validateMomoPhone(provider) {
+      const input = provider === 'airtel' ? document.getElementById('airtelPhone') : document.getElementById('tnmPhone');
+      const btn = provider === 'airtel' ? document.getElementById('btnPayAirtel') : document.getElementById('btnPayTnm');
+      const phone = input.value.replace(/\s/g, '');
+
+      // Basic Malawi phone validation
+      const isValid = phone.length >= 10 && /^0[89]\d{8,}$/.test(phone);
+      btn.disabled = !isValid;
+    }
+
+    function processMomoPayment(provider) {
+      const btn = provider === 'airtel' ? document.getElementById('btnPayAirtel') : document.getElementById('btnPayTnm');
+      const phone = provider === 'airtel' ? document.getElementById('airtelPhone').value : document.getElementById('tnmPhone').value;
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Simulate payment processing
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        showPaymentSuccess(provider === 'airtel' ? 'Airtel Money' : 'TNM Mpamba', phone);
+      }, 3000);
+    }
+
+    // ── Bank Card ──
+    function formatCardNumber(input) {
+      let val = input.value.replace(/\D/g, '');
+      val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+      input.value = val;
+
+      // Detect card type
+      const icon = document.getElementById('cardTypeIcon');
+      if (val.startsWith('4')) {
+        icon.textContent = '🟦'; // Visa
+      } else if (val.startsWith('5') || val.startsWith('2')) {
+        icon.textContent = '🟧'; // Mastercard
+      } else {
+        icon.textContent = '💳';
+      }
+    }
+
+    function formatExpiry(input) {
+      let val = input.value.replace(/\D/g, '');
+      if (val.length >= 2) {
+        val = val.substring(0, 2) + ' / ' + val.substring(2, 4);
+      }
+      input.value = val;
+    }
+
+    function validateCard() {
+      const name = document.getElementById('cardName').value.trim();
+      const number = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expiry = document.getElementById('cardExpiry').value.replace(/\s/g, '').replace('/', '');
+      const cvv = document.getElementById('cardCvv').value.trim();
+
+      const isValid = name.length >= 2 && number.length >= 15 && expiry.length >= 4 && cvv.length >= 3;
+      document.getElementById('btnPayCard').disabled = !isValid;
+    }
+
+    function processCardPayment() {
+      const btn = document.getElementById('btnPayCard');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      const cardNum = document.getElementById('cardNumber').value;
+      const lastFour = cardNum.replace(/\s/g, '').slice(-4);
+
+      // Simulate payment processing
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        showPaymentSuccess('Bank Card', '•••• ' + lastFour);
+      }, 3000);
+    }
+
+    // ── Payment Success ──
+    function showPaymentSuccess(method, detail) {
+      clearInterval(timerInterval);
+
+      // Generate reference
+      const ref = 'AAS-2026-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+      document.getElementById('receiptRef').textContent = ref;
+
+      // Populate receipt from booking data
+      const data = sessionStorage.getItem('aas_booking');
+      if (data) {
+        const b = JSON.parse(data);
+        document.getElementById('receiptService').textContent = b.service || '—';
+        document.getElementById('receiptTreatment').textContent = b.treatment || '—';
+        document.getElementById('receiptDateTime').textContent = (b.dateStr || '') + ' at ' + (b.timeStr || '');
+        document.getElementById('receiptTherapist').textContent = b.therapistName || '—';
+      }
+
+      document.getElementById('receiptMethod').textContent = method + ' (' + detail + ')';
+
+      // Show modal
+      document.getElementById('paymentSuccessOverlay').classList.add('visible');
+
+      // Clear booking from session
+      sessionStorage.removeItem('aas_booking');
+    }
+  </script>
+</body>
+</html>

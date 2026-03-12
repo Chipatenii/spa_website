@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment — Africa Aesthetics Spa</title>
+  <meta name="description" content="Book your treatment at Africa Aesthetics Spa. Choose your service, pick a therapist, and secure your slot with a K50 deposit. Mon–Sat, 9am–5pm." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ═══ Booking-specific styles ═══ */
+
+    .booking-progress {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin: 40px auto 48px;
+      max-width: 600px;
+    }
+
+    .booking-progress .prog-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+
+    .booking-progress .prog-step::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--light-border);
+      z-index: 0;
+    }
+
+    .booking-progress .prog-step:last-child::after {
+      display: none;
+    }
+
+    .booking-progress .prog-step.active .prog-num,
+    .booking-progress .prog-step.done .prog-num {
+      background: var(--teal);
+      color: var(--white);
+      border-color: var(--teal);
+    }
+
+    .booking-progress .prog-step.done::after {
+      background: var(--teal);
+    }
+
+    .booking-progress .prog-step.active .prog-label {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .prog-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--light-border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+      transition: var(--transition);
+    }
+
+    .prog-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    /* Step containers */
+    .booking-step-container {
+      display: none;
+      animation: fadeSlideIn 0.4s ease forwards;
+    }
+
+    .booking-step-container.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Service selection grid */
+    .service-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .service-select-card {
+      background: var(--white);
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .service-select-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .service-select-card.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.15);
+    }
+
+    .service-select-card .ssc-icon { font-size: 32px; margin-bottom: 10px; }
+    .service-select-card h4 { font-family: var(--font-heading); font-size: 17px; margin-bottom: 4px; }
+    .service-select-card p { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* Treatment sub-selection */
+    .treatment-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .treatment-chip {
+      padding: 12px 16px;
+      background: var(--white);
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .treatment-chip:hover {
+      border-color: var(--gold);
+    }
+
+    .treatment-chip.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    /* Therapist selection */
+    .therapist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .therapist-card {
+      background: var(--white);
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-md);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .therapist-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .therapist-card.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.15);
+    }
+
+    .therapist-card.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .therapist-card .tc-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--teal-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 12px;
+    }
+
+    .therapist-card h4 { font-family: var(--font-heading); font-size: 16px; margin-bottom: 2px; }
+    .therapist-card .tc-role { font-size: 12px; color: var(--teal); font-weight: 500; margin-bottom: 6px; }
+    .therapist-card .tc-avail { font-size: 11px; color: var(--muted); }
+
+    /* Date-time picker */
+    .datetime-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .date-picker-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .date-picker-header h4 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+    }
+
+    .date-picker-header button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--light-border);
+      background: var(--white);
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date-picker-header button:hover {
+      background: var(--gold-light);
+      border-color: var(--gold);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-day-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      padding: 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cal-day {
+      text-align: center;
+      padding: 10px 4px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .cal-day:hover:not(.disabled):not(.empty) {
+      background: var(--gold-light);
+    }
+
+    .cal-day.selected {
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .cal-day.today {
+      border: 2px solid var(--gold);
+    }
+
+    .cal-day.disabled {
+      color: #d0d0d0;
+      cursor: not-allowed;
+    }
+
+    .cal-day.empty {
+      cursor: default;
+    }
+
+    /* Time slots */
+    .time-slots-container h4 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .time-slots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .time-slot {
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid var(--light-border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .time-slot:hover:not(.disabled) {
+      border-color: var(--gold);
+      background: var(--gold-light);
+    }
+
+    .time-slot.selected {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    .time-slot.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .no-date-msg {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    /* Confirmation */
+    .confirm-card {
+      background: var(--white);
+      border: 1px solid var(--light-border);
+      border-radius: var(--radius-md);
+      max-width: 520px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .confirm-header {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      padding: 28px 32px;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .confirm-header h3 {
+      font-size: 22px;
+      color: var(--white);
+    }
+
+    .confirm-body {
+      padding: 28px 32px;
+    }
+
+    .confirm-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--light-border);
+      font-size: 14px;
+    }
+
+    .confirm-row:last-child {
+      border-bottom: none;
+    }
+
+    .confirm-row .cr-label {
+      color: var(--muted);
+    }
+
+    .confirm-row .cr-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .confirm-deposit {
+      background: var(--gold-light);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .confirm-deposit .cd-amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      font-family: var(--font-heading);
+    }
+
+    .confirm-deposit p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Booking nav buttons */
+    .booking-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 36px;
+      gap: 12px;
+    }
+
+    .booking-nav .btn-back {
+      padding: 12px 28px;
+      border: 1.5px solid var(--light-border);
+      border-radius: var(--radius-xl);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--white);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .booking-nav .btn-back:hover {
+      border-color: var(--dark);
+      color: var(--dark);
+    }
+
+    .booking-nav .btn-next {
+      padding: 12px 32px;
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-xl);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(42, 157, 143, 0.3);
+    }
+
+    .booking-nav .btn-next:hover:not(:disabled) {
+      background: var(--teal-dark);
+      transform: translateY(-1px);
+    }
+
+    .booking-nav .btn-next:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Success modal */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .success-overlay.visible {
+      display: flex;
+    }
+
+    .success-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      animation: fadeSlideIn 0.4s ease;
+    }
+
+    .success-modal .sm-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px;
+    }
+
+    .success-modal h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .success-modal p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .datetime-grid { grid-template-columns: 1fr; }
+      .service-select-grid { grid-template-columns: 1fr 1fr; }
+      .therapist-grid { grid-template-columns: 1fr 1fr; }
+      .prog-label { font-size: 10px; }
+      .confirm-body { padding: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .service-select-grid { grid-template-columns: 1fr; }
+      .therapist-grid { grid-template-columns: 1fr; }
+      .time-slots-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Africa <span>Aesthetics</span></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <div class="nav-dropdown">
+          <a href="#">Services ▾</a>
+          <div class="nav-dropdown-menu">
+            <a href="services/lashes.html">Lashes</a>
+            <a href="services/hair.html">Hair</a>
+            <a href="services/facials.html">Facials</a>
+            <a href="services/body-contouring.html">Body Contouring</a>
+            <a href="services/aesthetics.html">Aesthetics</a>
+            <a href="services/massages.html">Massages</a>
+            <a href="services/pedicure.html">Pedicure</a>
+          </div>
+        </div>
+        <a href="gallery.html">Gallery</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="booking.html" class="btn-book-nav">Book Now →</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <div class="section-label">Book Online</div>
+      <h1 class="section-title">Book Your Appointment</h1>
+      <p class="section-subtitle centered" style="margin: 0 auto;">
+        Select your treatment, choose a therapist, and secure your slot — all in under 2 minutes.
+      </p>
+    </div>
+  </div>
+
+  <!-- BOOKING SECTION -->
+  <section class="section-light" style="padding-bottom: 100px;">
+    <div class="container">
+
+      <!-- Progress Bar -->
+      <div class="booking-progress" id="progressBar">
+        <div class="prog-step active" data-step="1">
+          <div class="prog-num">1</div>
+          <div class="prog-label">Service</div>
+        </div>
+        <div class="prog-step" data-step="2">
+          <div class="prog-num">2</div>
+          <div class="prog-label">Therapist</div>
+        </div>
+        <div class="prog-step" data-step="3">
+          <div class="prog-num">3</div>
+          <div class="prog-label">Date & Time</div>
+        </div>
+        <div class="prog-step" data-step="4">
+          <div class="prog-num">4</div>
+          <div class="prog-label">Confirm</div>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 1: Service Selection ═══ -->
+      <div class="booking-step-container active" id="step1">
+        <div class="text-center" style="margin-bottom: 32px;">
+          <h2 style="font-size: 24px; font-family: var(--font-heading);">Choose Your Service</h2>
+          <p style="font-size: 14px; color: var(--muted);">Select a category, then pick the specific treatment you'd like.</p>
+        </div>
+
+        <div class="service-select-grid" id="serviceGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="treatmentSection" style="margin-top: 28px; display: none;">
+          <h3 style="font-size: 18px; font-family: var(--font-heading); margin-bottom: 4px;">Select Treatment</h3>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">Pick the specific treatment within your chosen category.</p>
+          <div class="treatment-select-grid" id="treatmentGrid"></div>
+        </div>
+
+        <div class="booking-nav">
+          <div></div>
+          <button class="btn-next" id="nextBtn1" disabled onclick="goToStep(2)">Continue to Therapist →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 2: Therapist Selection ═══ -->
+      <div class="booking-step-container" id="step2">
+        <div class="text-center" style="margin-bottom: 32px;">
+          <h2 style="font-size: 24px; font-family: var(--font-heading);">Choose Your Therapist</h2>
+          <p style="font-size: 14px; color: var(--muted);">Select a therapist for your <strong id="selectedServiceLabel"></strong> appointment.</p>
+        </div>
+
+        <div class="therapist-grid" id="therapistGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="booking-nav">
+          <button class="btn-back" onclick="goToStep(1)">← Back</button>
+          <button class="btn-next" id="nextBtn2" disabled onclick="goToStep(3)">Continue to Date & Time →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 3: Date & Time ═══ -->
+      <div class="booking-step-container" id="step3">
+        <div class="text-center" style="margin-bottom: 32px;">
+          <h2 style="font-size: 24px; font-family: var(--font-heading);">Pick a Date & Time</h2>
+          <p style="font-size: 14px; color: var(--muted);">Booking with <strong id="selectedTherapistLabel"></strong>. Select an available day and time slot.</p>
+        </div>
+
+        <div class="datetime-grid">
+          <!-- Calendar -->
+          <div>
+            <div class="date-picker-header">
+              <button onclick="changeMonth(-1)" id="prevMonthBtn">‹</button>
+              <h4 id="calendarMonthLabel"></h4>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+              <!-- Day labels + days populated by JS -->
+            </div>
+          </div>
+
+          <!-- Time Slots -->
+          <div class="time-slots-container">
+            <h4>Available Slots</h4>
+            <div id="timeSlotsArea">
+              <div class="no-date-msg">← Select a date to view available time slots</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-nav">
+          <button class="btn-back" onclick="goToStep(2)">← Back</button>
+          <button class="btn-next" id="nextBtn3" disabled onclick="goToStep(4)">Review & Confirm →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 4: Confirmation ═══ -->
+      <div class="booking-step-container" id="step4">
+        <div class="text-center" style="margin-bottom: 32px;">
+          <h2 style="font-size: 24px; font-family: var(--font-heading);">Confirm Your Booking</h2>
+          <p style="font-size: 14px; color: var(--muted);">Review your appointment details below.</p>
+        </div>
+
+        <div class="confirm-card">
+          <div class="confirm-header">
+            <div style="font-size: 28px; margin-bottom: 8px;">📋</div>
+            <h3>Booking Summary</h3>
+          </div>
+          <div class="confirm-body">
+            <div class="confirm-row">
+              <span class="cr-label">Service</span>
+              <span class="cr-value" id="confirmService"></span>
+            </div>
+            <div class="confirm-row">
+              <span class="cr-label">Treatment</span>
+              <span class="cr-value" id="confirmTreatment"></span>
+            </div>
+            <div class="confirm-row">
+              <span class="cr-label">Therapist</span>
+              <span class="cr-value" id="confirmTherapist"></span>
+            </div>
+            <div class="confirm-row">
+              <span class="cr-label">Date</span>
+              <span class="cr-value" id="confirmDate"></span>
+            </div>
+            <div class="confirm-row">
+              <span class="cr-label">Time</span>
+              <span class="cr-value" id="confirmTime"></span>
+            </div>
+
+            <div class="confirm-deposit">
+              <div class="cd-amount">K50</div>
+              <p>Non-refundable deposit to secure your booking</p>
+            </div>
+
+            <!-- Contact details for booking -->
+            <div style="margin-top: 24px;">
+              <div class="form-group">
+                <label for="bookName">Your Name</label>
+                <input type="text" id="bookName" placeholder="Full name" required />
+              </div>
+              <div class="form-group">
+                <label for="bookPhone">Phone Number</label>
+                <input type="tel" id="bookPhone" placeholder="Phone number" required />
+              </div>
+              <div class="form-group">
+                <label for="bookEmail">Email (optional)</label>
+                <input type="email" id="bookEmail" placeholder="your@email.com" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-nav" style="max-width: 520px; margin: 36px auto 0;">
+          <button class="btn-back" onclick="goToStep(3)">← Back</button>
+          <button class="btn-next" onclick="confirmBooking()" style="background: linear-gradient(135deg, var(--gold), var(--gold-dark)); box-shadow: var(--shadow-gold);">Confirm & Pay K50 Deposit</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SUCCESS MODAL -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="sm-icon">✅</div>
+      <h2>Booking Confirmed!</h2>
+      <p id="successMsg">Your appointment has been booked. We'll send a confirmation to your phone. See you soon!</p>
+      <a href="/" class="btn btn-primary">Back to Home →</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">Africa <span>Aesthetics</span></div>
+          <p class="footer-desc">Premium beauty and wellness treatments by CPD-accredited professionals.</p>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services/lashes.html">Lashes</a></li>
+            <li><a href="services/hair.html">Hair</a></li>
+            <li><a href="services/facials.html">Facials</a></li>
+            <li><a href="services/body-contouring.html">Body Contouring</a></li>
+            <li><a href="services/aesthetics.html">Aesthetics</a></li>
+            <li><a href="services/massages.html">Massages</a></li>
+            <li><a href="services/pedicure.html">Pedicure</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="booking.html">Book Now</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Hours</h5>
+          <ul>
+            <li><a>Mon – Sat: 9am – 5pm</a></li>
+            <li><a>Sunday: Closed</a></li>
+          </ul>
+          <h5 style="margin-top: 24px;">Legal</h5>
+          <ul>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Africa Aesthetics Spa. All rights reserved.</span>
+        <a href="cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-inner">
+      <p class="cookie-text">We use cookies to enhance your experience. <a href="cookie-policy.html">Read our Cookie Policy</a></p>
+      <div class="cookie-actions">
+        <button class="cookie-accept">Accept</button>
+        <button class="cookie-decline">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* ═══════════════════════════════════════
+       BOOKING ENGINE
+       Multi-step booking with real business rules
+       ═══════════════════════════════════════ */
+
+    // ── Data ──
+    const SERVICES = [
+      { id: 'lashes', icon: '✨', label: 'Lashes', treatments: ['Classic Lashes', 'Volume Lashes', 'Hybrid Lashes', 'Lash Lift & Tint'] },
+      { id: 'hair', icon: '💇', label: 'Hair', treatments: ['Braids', 'Styling', 'Hair Treatment'] },
+      { id: 'facials', icon: '🧖', label: 'Facials', treatments: ['Deep Cleanse Facial', 'Hydrating Facial', 'Anti-Aging Facial', 'Chemical Peel'] },
+      { id: 'body', icon: '💎', label: 'Body Contouring', treatments: ['BBL / Hip Dips', 'Fat Dissolving', 'Body Sculpting'] },
+      { id: 'aesthetics', icon: '🔬', label: 'Aesthetics', treatments: ['Micro Needling', 'Lip Enhancement', 'Skin Rejuvenation'] },
+      { id: 'massages', icon: '💆', label: 'Massages', treatments: ['Full Body Massage', 'Deep Tissue Massage', 'Hot Stone Massage', 'Couples Massage'] },
+      { id: 'pedicure', icon: '💅', label: 'Pedicure', treatments: ['Classic Pedicure', 'Gel Pedicure', 'Spa Pedicure'] },
+    ];
+
+    const THERAPISTS = [
+      { id: 'swoden',  name: 'Mrs Swoden',       role: 'Director / Lead Aesthetician', icon: '👑', days: [2,3,4,5], slots: 3,  serves: ['facials','aesthetics','body','pedicure'] },
+      { id: 'lisa',    name: 'Lisa',              role: 'Therapist',                   icon: '💆', days: [1,2,3,4,5,6], slots: 5, serves: ['facials','massages','body','pedicure','aesthetics'] },
+      { id: 'hair1',   name: 'Hair Specialist',   role: 'Hair Dresser',                icon: '💇', days: [1,2,3,4,5,6], slots: 5, serves: ['hair'] },
+      { id: 'mass1',   name: 'Masseuse 1',        role: 'Massage Therapist',            icon: '🙌', days: [1,2,3,4,5,6], slots: 5, serves: ['massages','body'] },
+      { id: 'lashm',   name: 'Lash & Massage Expert', role: 'Lash Tech / Masseuse',    icon: '✨', days: [1,2,3,4,5,6], slots: 5, serves: ['lashes','massages'] },
+      { id: 'mass2',   name: 'Masseuse 2',        role: 'Massage Therapist',            icon: '🙌', days: [1,2,3,4,5,6], slots: 5, serves: ['massages','body'] },
+      { id: 'nurse',   name: 'Nurse',             role: 'Registered Nurse',             icon: '🏥', days: [1,2,3,4,5,6], slots: 5, serves: ['aesthetics','facials'] },
+      { id: 'lash1',   name: 'Lash Specialist',   role: 'Lash Tech',                    icon: '✨', days: [1,2,3,4,5,6], slots: 5, serves: ['lashes'] },
+      { id: 'gladys',  name: 'Gladys',            role: 'Aesthetician',                 icon: '💎', days: [1,2,3,4,5,6], slots: 5, serves: ['aesthetics','facials','body','pedicure'] },
+    ];
+
+    const TIME_SLOTS = [
+      '09:00', '09:30', '10:00', '10:30',
+      '11:00', '11:30', '12:00', '12:30',
+      '13:00', '13:30', '14:00', '14:30',
+      '15:00', '15:30', '16:00', '16:30', '17:00'
+    ];
+
+    // ── Booking State ──
+    let booking = {
+      service: null,
+      treatment: null,
+      therapist: null,
+      date: null,
+      time: null,
+    };
+
+    let currentStep = 1;
+    let calendarDate = new Date();
+    calendarDate.setDate(1);
+
+    // ── Initialize ──
+    document.addEventListener('DOMContentLoaded', () => {
+      renderServiceGrid();
+      renderCalendar();
+    });
+
+    // ── Step Navigation ──
+    function goToStep(step) {
+      // Validate before moving forward
+      if (step === 2 && (!booking.service || !booking.treatment)) return;
+      if (step === 3 && !booking.therapist) return;
+      if (step === 4 && (!booking.date || !booking.time)) return;
+
+      currentStep = step;
+
+      // Hide all steps
+      document.querySelectorAll('.booking-step-container').forEach(el => el.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+
+      // Update progress bar
+      document.querySelectorAll('.prog-step').forEach(el => {
+        const s = parseInt(el.dataset.step);
+        el.classList.remove('active', 'done');
+        if (s < step) el.classList.add('done');
+        if (s === step) el.classList.add('active');
+      });
+
+      // Step-specific setup
+      if (step === 2) {
+        document.getElementById('selectedServiceLabel').textContent = booking.treatment;
+        renderTherapistGrid();
+      }
+      if (step === 3) {
+        const t = THERAPISTS.find(t => t.id === booking.therapist);
+        document.getElementById('selectedTherapistLabel').textContent = t?.name || '';
+        booking.date = null;
+        booking.time = null;
+        document.getElementById('nextBtn3').disabled = true;
+        renderCalendar();
+        document.getElementById('timeSlotsArea').innerHTML = '<div class="no-date-msg">← Select a date to view available time slots</div>';
+      }
+      if (step === 4) {
+        populateConfirmation();
+      }
+
+      // Scroll to top of booking
+      window.scrollTo({ top: document.querySelector('.booking-progress').offsetTop - 100, behavior: 'smooth' });
+    }
+
+    // ── Step 1: Services ──
+    function renderServiceGrid() {
+      const grid = document.getElementById('serviceGrid');
+      grid.innerHTML = SERVICES.map(s => `
+        <div class="service-select-card" data-id="${s.id}" onclick="selectService('${s.id}')">
+          <div class="ssc-icon">${s.icon}</div>
+          <h4>${s.label}</h4>
+          <p>${s.treatments.length} treatments available</p>
+        </div>
+      `).join('');
+    }
+
+    function selectService(id) {
+      booking.service = id;
+      booking.treatment = null;
+      document.getElementById('nextBtn1').disabled = true;
+
+      // Highlight selected
+      document.querySelectorAll('.service-select-card').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`.service-select-card[data-id="${id}"]`).classList.add('selected');
+
+      // Show treatments
+      const service = SERVICES.find(s => s.id === id);
+      const section = document.getElementById('treatmentSection');
+      const tGrid = document.getElementById('treatmentGrid');
+      section.style.display = 'block';
+
+      tGrid.innerHTML = service.treatments.map(t => `
+        <div class="treatment-chip" onclick="selectTreatment(this, '${t}')">${t}</div>
+      `).join('');
+
+      section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function selectTreatment(el, treatment) {
+      booking.treatment = treatment;
+      document.querySelectorAll('.treatment-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('nextBtn1').disabled = false;
+    }
+
+    // ── Step 2: Therapists ──
+    function renderTherapistGrid() {
+      const grid = document.getElementById('therapistGrid');
+      grid.innerHTML = THERAPISTS.map(t => {
+        const canServe = t.serves.includes(booking.service);
+        return `
+          <div class="therapist-card ${canServe ? '' : 'disabled'}" data-id="${t.id}" onclick="${canServe ? `selectTherapist('${t.id}')` : ''}">
+            <div class="tc-avatar">${t.icon}</div>
+            <h4>${t.name}</h4>
+            <div class="tc-role">${t.role}</div>
+            <div class="tc-avail">${canServe ? formatDays(t.days) + ' · ' + t.slots + ' slots/day' : 'Not available for this service'}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Reset selection
+      booking.therapist = null;
+      document.getElementById('nextBtn2').disabled = true;
+    }
+
+    function selectTherapist(id) {
+      booking.therapist = id;
+      document.querySelectorAll('.therapist-card').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`.therapist-card[data-id="${id}"]`).classList.add('selected');
+      document.getElementById('nextBtn2').disabled = false;
+    }
+
+    function formatDays(days) {
+      const names = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      if (days.length === 6) return 'Mon–Sat';
+      return names[days[0]] + '–' + names[days[days.length - 1]];
+    }
+
+    // ── Step 3: Calendar ──
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Month label
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      document.getElementById('calendarMonthLabel').textContent = monthNames[month] + ' ' + year;
+
+      // Prevent going to past months
+      const currentMonth = new Date();
+      currentMonth.setDate(1);
+      currentMonth.setHours(0, 0, 0, 0);
+      document.getElementById('prevMonthBtn').disabled = (year === currentMonth.getFullYear() && month === currentMonth.getMonth());
+
+      // Get therapist availability
+      const therapist = THERAPISTS.find(t => t.id === booking.therapist);
+      const availDays = therapist ? therapist.days : [1, 2, 3, 4, 5, 6];
+
+      let html = '';
+      // Day labels
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => {
+        html += `<div class="cal-day-label">${d}</div>`;
+      });
+
+      // Empty cells before first day
+      for (let i = 0; i < firstDay; i++) {
+        html += '<div class="cal-day empty"></div>';
+      }
+
+      // Days
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const dayOfWeek = date.getDay(); // 0=Sun, 1=Mon ... 6=Sat
+        const isPast = date < today;
+        const isSunday = dayOfWeek === 0;
+        const isAvailable = availDays.includes(dayOfWeek) && !isPast && !isSunday;
+        const isToday = date.getTime() === today.getTime();
+        const isSelected = booking.date && date.toDateString() === booking.date.toDateString();
+
+        let classes = 'cal-day';
+        if (!isAvailable) classes += ' disabled';
+        if (isToday) classes += ' today';
+        if (isSelected) classes += ' selected';
+
+        html += `<div class="${classes}" onclick="${isAvailable ? `selectDate(${year},${month},${d})` : ''}">${d}</div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function changeMonth(delta) {
+      calendarDate.setMonth(calendarDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function selectDate(y, m, d) {
+      booking.date = new Date(y, m, d);
+      booking.time = null;
+      document.getElementById('nextBtn3').disabled = true;
+      renderCalendar();
+      renderTimeSlots();
+    }
+
+    function renderTimeSlots() {
+      const area = document.getElementById('timeSlotsArea');
+      if (!booking.date) {
+        area.innerHTML = '<div class="no-date-msg">← Select a date to view available time slots</div>';
+        return;
+      }
+
+      const therapist = THERAPISTS.find(t => t.id === booking.therapist);
+      const maxSlots = therapist ? therapist.slots : 5;
+
+      // Simulate some random booked slots for realism
+      const seed = booking.date.getDate() + booking.date.getMonth() * 31;
+      const bookedIndices = new Set();
+      for (let i = 0; i < (TIME_SLOTS.length - maxSlots); i++) {
+        bookedIndices.add((seed * (i + 3) * 7) % TIME_SLOTS.length);
+      }
+
+      let html = '<div class="time-slots-grid">';
+      TIME_SLOTS.forEach((slot, i) => {
+        const isBooked = bookedIndices.has(i);
+        const isSelected = booking.time === slot;
+        const hour = parseInt(slot.split(':')[0]);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour > 12 ? hour - 12 : hour;
+        const displayTime = displayHour + ':' + slot.split(':')[1] + ' ' + ampm;
+
+        html += `<div class="time-slot ${isBooked ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                      onclick="${isBooked ? '' : `selectTime('${slot}')`}">${displayTime}${isBooked ? ' · Booked' : ''}</div>`;
+      });
+      html += '</div>';
+      html += `<p style="font-size: 12px; color: var(--muted); margin-top: 12px; text-align: center;">
+                 ${maxSlots} slots available per day for ${therapist?.name || 'this therapist'}
+               </p>`;
+
+      area.innerHTML = html;
+    }
+
+    function selectTime(time) {
+      booking.time = time;
+      document.getElementById('nextBtn3').disabled = false;
+      renderTimeSlots();
+    }
+
+    // ── Step 4: Confirmation ──
+    function populateConfirmation() {
+      const service = SERVICES.find(s => s.id === booking.service);
+      const therapist = THERAPISTS.find(t => t.id === booking.therapist);
+
+      document.getElementById('confirmService').textContent = service?.label || '';
+      document.getElementById('confirmTreatment').textContent = booking.treatment || '';
+      document.getElementById('confirmTherapist').textContent = therapist?.name + ' — ' + therapist?.role || '';
+
+      const dateStr = booking.date ? booking.date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+      document.getElementById('confirmDate').textContent = dateStr;
+
+      const hour = parseInt(booking.time?.split(':')[0] || 0);
+      const min = booking.time?.split(':')[1] || '00';
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const dh = hour > 12 ? hour - 12 : hour;
+      document.getElementById('confirmTime').textContent = dh + ':' + min + ' ' + ampm;
+    }
+
+    function confirmBooking() {
+      const name = document.getElementById('bookName').value.trim();
+      const phone = document.getElementById('bookPhone').value.trim();
+      const email = document.getElementById('bookEmail').value.trim();
+
+      if (!name) {
+        alert('Please enter your name.');
+        document.getElementById('bookName').focus();
+        return;
+      }
+      if (!phone) {
+        alert('Please enter your phone number.');
+        document.getElementById('bookPhone').focus();
+        return;
+      }
+
+      // Save booking data to sessionStorage and redirect to payment
+      const service = SERVICES.find(s => s.id === booking.service);
+      const therapist = THERAPISTS.find(t => t.id === booking.therapist);
+      const dateStr = booking.date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const hour = parseInt(booking.time?.split(':')[0] || 0);
+      const min = booking.time?.split(':')[1] || '00';
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const dh = hour > 12 ? hour - 12 : hour;
+      const timeStr = dh + ':' + min + ' ' + ampm;
+
+      const bookingData = {
+        service: service?.label,
+        treatment: booking.treatment,
+        therapistName: therapist?.name,
+        therapistRole: therapist?.role,
+        dateStr: dateStr,
+        timeStr: timeStr,
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: email,
+      };
+
+      sessionStorage.setItem('aas_booking', JSON.stringify(bookingData));
+      window.location.href = 'payment.html';
+    }
+  </script>
+</body>
+</html>
