@@ -821,7 +821,7 @@
     ];
 
     const THERAPISTS = [
-      { id: 'swoden',  name: 'Mrs Swoden',       role: 'Director / Lead Aesthetician', icon: '👑', days: [2,3,4,5], slots: 3,  serves: ['facials','aesthetics','body','pedicure'] },
+      { id: 'swoden',  name: 'Gladys',           role: 'Director / Lead Aesthetician', icon: './images/gladys.jpg', days: [2,3,4,5], slots: 3,  serves: ['facials','aesthetics','body','pedicure'] },
       { id: 'lisa',    name: 'Lisa',              role: 'Therapist',                   icon: '💆', days: [1,2,3,4,5,6], slots: 5, serves: ['facials','massages','body','pedicure','aesthetics'] },
       { id: 'hair1',   name: 'Hair Specialist',   role: 'Hair Dresser',                icon: '💇', days: [1,2,3,4,5,6], slots: 5, serves: ['hair'] },
       { id: 'mass1',   name: 'Masseuse 1',        role: 'Massage Therapist',            icon: '🙌', days: [1,2,3,4,5,6], slots: 5, serves: ['massages','body'] },
@@ -829,7 +829,6 @@
       { id: 'mass2',   name: 'Masseuse 2',        role: 'Massage Therapist',            icon: '🙌', days: [1,2,3,4,5,6], slots: 5, serves: ['massages','body'] },
       { id: 'nurse',   name: 'Nurse',             role: 'Registered Nurse',             icon: '🏥', days: [1,2,3,4,5,6], slots: 5, serves: ['aesthetics','facials'] },
       { id: 'lash1',   name: 'Lash Specialist',   role: 'Lash Tech',                    icon: '✨', days: [1,2,3,4,5,6], slots: 5, serves: ['lashes'] },
-      { id: 'gladys',  name: 'Gladys',            role: 'Aesthetician',                 icon: '💎', days: [1,2,3,4,5,6], slots: 5, serves: ['aesthetics','facials','body','pedicure'] },
     ];
 
     const TIME_SLOTS = [
@@ -949,7 +948,9 @@
         const canServe = t.serves.includes(booking.service);
         return `
           <div class="therapist-card ${canServe ? '' : 'disabled'}" data-id="${t.id}" onclick="${canServe ? `selectTherapist('${t.id}')` : ''}">
-            <div class="tc-avatar">${t.icon}</div>
+            <div class="tc-avatar" style="overflow: hidden;">
+              ${t.icon.includes('.jpg') || t.icon.includes('.png') ? `<img src="${t.icon}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : t.icon}
+            </div>
             <h4>${t.name}</h4>
             <div class="tc-role">${t.role}</div>
             <div class="tc-avail">${canServe ? formatDays(t.days) + ' · ' + t.slots + ' slots/day' : 'Not available for this service'}</div>

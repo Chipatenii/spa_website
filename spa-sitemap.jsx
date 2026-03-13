@@ -169,7 +169,7 @@ const pages = [
 
 /* ─── Team ─── */
 const team = [
-  { name: "Mrs Swoden", role: "Director / Lead Aesthetician", availability: "Tue–Fri", slots: 3, color: brand.gold },
+  { name: "Gladys", role: "Director / Lead Aesthetician", availability: "Tue–Fri", slots: 3, color: brand.gold },
   { name: "Lisa", role: "Therapist", availability: "Mon–Sat", slots: 5, color: brand.teal },
   { name: "—", role: "Hair Dresser", availability: "Mon–Sat", slots: 5, color: "#8d9ec9" },
   { name: "—", role: "Masseuse", availability: "Mon–Sat", slots: 5, color: "#c4a882" },
@@ -177,7 +177,6 @@ const team = [
   { name: "—", role: "Masseuse", availability: "Mon–Sat", slots: 5, color: "#c4a882" },
   { name: "—", role: "Nurse", availability: "Mon–Sat", slots: 5, color: "#e09b8a" },
   { name: "—", role: "Lash Tech", availability: "Mon–Sat", slots: 5, color: "#b07d9e" },
-  { name: "Gladys", role: "Aesthetician", availability: "Mon–Sat", slots: 5, color: brand.teal },
 ];
 
 /* ─── Booking Rules ─── */
@@ -255,7 +254,7 @@ export default function SiteMap() {
             Africa Aesthetics Spa — Full Site Map
           </h1>
           <p style={{ color: brand.muted, marginTop: 10, fontSize: 14, lineHeight: 1.6 }}>
-            {totalMainPages} pages · {totalServicePages} service detail pages · {team.length} team members · 3 user flows
+            {totalMainPages} pages · {totalServicePages} service detail pages · 8 team members · 3 user flows
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
             <ColorSwatch color={brand.white} label="White (Primary)" border />
