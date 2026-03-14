@@ -171,12 +171,12 @@ const pages = [
 const team = [
   { name: "Gladys", role: "Director / Lead Aesthetician", availability: "Tue–Fri", slots: 3, color: brand.gold },
   { name: "Lisa", role: "Therapist", availability: "Mon–Sat", slots: 5, color: brand.teal },
-  { name: "—", role: "Hair Dresser", availability: "Mon–Sat", slots: 5, color: "#8d9ec9" },
+  { name: "Mwansa", role: "Hair Dresser", availability: "Mon–Sat", slots: 5, color: "#8d9ec9" },
+  { name: "Yombwe", role: "Masseuse", availability: "Mon–Sat", slots: 5, color: "#c4a882" },
+  { name: "Ben", role: "Lash Tech / Masseuse", availability: "Mon–Sat", slots: 5, color: "#b07d9e" },
   { name: "—", role: "Masseuse", availability: "Mon–Sat", slots: 5, color: "#c4a882" },
-  { name: "—", role: "Lash Tech / Masseuse", availability: "Mon–Sat", slots: 5, color: "#b07d9e" },
-  { name: "—", role: "Masseuse", availability: "Mon–Sat", slots: 5, color: "#c4a882" },
-  { name: "—", role: "Nurse", availability: "Mon–Sat", slots: 5, color: "#e09b8a" },
-  { name: "—", role: "Lash Tech", availability: "Mon–Sat", slots: 5, color: "#b07d9e" },
+  { name: "Ngosa", role: "Nurse", availability: "Mon–Sat", slots: 5, color: "#e09b8a" },
+  { name: "Timothy", role: "Lash Tech", availability: "Mon–Sat", slots: 5, color: "#b07d9e" },
 ];
 
 /* ─── Booking Rules ─── */
